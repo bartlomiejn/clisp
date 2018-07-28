@@ -34,6 +34,7 @@
         (if (not (y-or-n-p "Another record?: ")) (return))))
 
 (defun save-db (filename)
+  "Saves contents of *db* to filename"
   (with-open-file (out filename
                        :direction :output
                        :if-exists :supersede)
@@ -41,6 +42,7 @@
       (print *db* out))))
 
 (defun load-db (filename)
+  "Loads contents of *db* from filename"
   (with-open-file (in filename)
     (with-standard-io-syntax
       (setf *db* (read in)))))
@@ -53,4 +55,11 @@
   "Returns a lambda that selects records by artist name."
   #'(lambda (cd) (equal (getf cd :artist) artist)))
 
+(defun where (&key title artist rating (ripped nil ripped-p))
+  #'(lambda (cd)
+      (and
+       (if title (equal (getf cd :title) title) t)
+       (if artist (equal (getf cd :artist) artist) t)
+       (if rating (equal (getf cd :rating) rating) t)
+       (if ripped-p (equal (getf cd: ripped) ripped) t))))
 
