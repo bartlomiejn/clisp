@@ -46,9 +46,11 @@
       (setf *db* (read in)))))
 
 (defun select (selector-fn)
+  "Returns records that match selector function."
   (remove-if-not selector-fn *db*))
 
-(defun select-by-artist (artist)
-  (remove-if-not
-   #'(lambda (cd) (equal (getf cd :artist) artist))
-   *db*))
+(defun artist-selector (artist)
+  "Returns a lambda that selects records by artist name."
+  #'(lambda (cd) (equal (getf cd :artist) artist)))
+
+
