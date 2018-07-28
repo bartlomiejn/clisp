@@ -51,15 +51,23 @@
   "Returns records that match selector function."
   (remove-if-not selector-fn *db*))
 
-(defun artist-selector (artist)
-  "Returns a lambda that selects records by artist name."
-  #'(lambda (cd) (equal (getf cd :artist) artist)))
-
 (defun where (&key title artist rating (ripped nil ripped-p))
   #'(lambda (cd)
       (and
+       ; if syntax is more like ternary op in c-like languages: if (condition) action; else action;
        (if title (equal (getf cd :title) title) t)
        (if artist (equal (getf cd :artist) artist) t)
        (if rating (equal (getf cd :rating) rating) t)
-       (if ripped-p (equal (getf cd: ripped) ripped) t))))
+       (if ripped-p (equal (getf cd :ripped) ripped) t))))
+
+(defun update (selector-fn &key title artist rating (ripped nil ripped-p))
+  (setf *db*
+        (mapcar ; Maps over a list
+         #'(lambda (row)
+             (when (funcall selector-fn row)
+               (if title (setf (getf row :title) title))
+               (if artist (setf (getf row :artist) artist))
+               (if rating (setf (getf row :rating) rating))
+               (if ripped-p (setf (getf row :ripped) ripped)))
+             row) *db*)))
 
