@@ -27,10 +27,15 @@
    (prompt-read "Title")
    (prompt-read "Artist")
    (parse-int-default-0 (prompt-read "Rating"))
-   (prompt-read "Ripped [y/n]")))
+   (y-or-n-p "Ripped [y/n]: ")))
 
-(defvar *db* nil)
-(add-record (make-cd "Roses" "Kathy Mattea" 7 t))
-(add-record (make-cd "Fly" "Dixie Chicks" 8 t))
-(add-record (make-cd "Home" "Dixie Chicks" 9 t))
-(dump-db)
+(defun add-cds ()
+  (Loop (add-record (cd-from-prompt))
+        (if (not (y-or-n-p "Another record?: ")) (return))))
+
+(defun save-db (filename)
+  (with-open-file (out filename
+                       :direction :output
+                       :if-exists :supersede)
+    (with-standard-io-syntax
+      (print *db* out))))
