@@ -67,7 +67,7 @@
   ;; The difference is this implementation is a macro. 
   `#'(lambda (cd) (and ,@(make-comparisons-list clauses))))
 
-(defun where-standard (&key title artist rating (ripped nil ripped-p))
+(defun where-as-fun (&key title artist rating (ripped nil ripped-p))
   "Constructs a selector function for use with `select`, with provided properties matching the fields."
   #'(lambda (cd)
       (and
