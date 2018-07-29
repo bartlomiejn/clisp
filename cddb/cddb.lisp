@@ -34,10 +34,14 @@
    (parse-int-default-0 (prompt-read "Rating"))
    (y-or-n-p "Ripped [y/n]: ")))
 
-(defun add-cds ()
-  "Prompts to add a list of CDs to *db*."
-  (loop (add-record (cd-from-prompt))
-        (if (not (y-or-n-p "Another record?: ")) (return))))
+(defun make-comparison-expr (field value)
+  `(equal (getf cd ,field) ,value))
+
+(defun make-comparisons-list (fields)
+  (loop while fields
+        collecting (make-comparison-expr (pop fields) (pop fields))))
+
+;;; Save / Load
 
 (defun save-db (filename)
   "Saves contents of *db* to filename"
@@ -53,17 +57,15 @@
     (with-standard-io-syntax
       (setf *db* (read in)))))
 
-(defun make-comparison-expr (field value)
-  `(equal (getf cd ,field) ,value))
-
-(defun make-comparisons-list (fields)
-  (loop while fields
-        collecting (make-comparison-expr (pop fields) (pop fields))))
-
 ;;; CRUD Operations
 
+(defun add-cds ()
+  "Prompts to add a list of CDs to *db*."
+  (loop (add-record (cd-from-prompt))
+        (if (not (y-or-n-p "Another record?: ")) (return))))
+
 (defmacro where (&rest clauses)
-  "Constructs a selector function for use with `select`."
+  "Constructs a selector function for use with `select`, with provided properties matching the fields.."
   ;; The difference is this implementation is a macro. 
   `#'(lambda (cd) (and ,@(make-comparisons-list clauses))))
 
