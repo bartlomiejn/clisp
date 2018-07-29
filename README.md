@@ -1,2 +1,5 @@
 # clisp
-Learning lisp through "Practical Common Lisp"
+
+Learning Common Lisp through the "Practical Common Lisp" book.
+
+- `cddb` - Persistence with CRUD operations
