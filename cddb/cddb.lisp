@@ -1,6 +1,6 @@
-;;; cddb.lisp
-;;;
-;;; Persistence and CRUD operations for a list of hypothetical CDs.
+;;;; cddb.lisp
+;;;;
+;;;; Persistence and CRUD operations for a list of hypothetical CDs.
 
 (defun make-cd (title artist rating ripped)
   "Makes a CD list."
