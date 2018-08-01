@@ -20,8 +20,15 @@
 ;;     ((> p 19))
 ;;   (format t "~d " p))
 
-(defmacro do-primes ((var start end) &body body)
-  "Iterates over all prime numbers in the specified range."
+(defmacro do-primes-multiple-eval ((var start end) &body body)
+  "Iterates over all prime numbers in the specified range. This version evaluates
+   arguments multiple times, which might lead to unintended consequences."
   `(do ((,var (next-prime ,start) (next-prime (1+ ,var))))
        ((> ,var ,end))
+     ,@body))
+ 
+(defmacro do-primes ((var start end) &body body)
+  `(do ((ending-value ,end)
+        (,var (next-prime ,start) (next-prime (1+ ,var))))
+       ((> ,var ending-value))
      ,@body))
